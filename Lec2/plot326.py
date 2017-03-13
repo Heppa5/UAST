@@ -84,15 +84,15 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 
 # plot data
-plt.plot(msg_list[:,10], msg_list[:,2]/msg_list[:,7])
+plt.scatter(.0037*msg_list[:,2]/msg_list[:,7], msg_list[:,10])
 #plt.gcf().autofmt_xdate()
 
 #ax.set_ylim(bottom = 0)
 
 # document graph title and axes
-ax.set_title('Altitude vs. Time', fontsize = 20)
-ax.set_xlabel('Time [HH::MM]', fontsize = 15)
-ax.set_ylabel('Altitude [m]', fontsize = 15)
+ax.set_title('C-value vs. Specific Energy', fontsize = 20)
+ax.set_xlabel('Specific Energy [Wh/kg]', fontsize = 15)
+ax.set_ylabel('C-value [1]', fontsize = 15)
 # change y axes limits
 #ax.set_ylim([14,28])
 
