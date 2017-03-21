@@ -31,12 +31,12 @@ public:
       &ImageConverter::imageCb, this);
     image_pub_ = it_.advertise("/image_converter/output_video", 1);
 
-    cv::namedWindow(OPENCV_WINDOW);
+    //cv::namedWindow(OPENCV_WINDOW);
   }
 
   ~ImageConverter()
   {
-    cv::destroyWindow(OPENCV_WINDOW);
+    //cv::destroyWindow(OPENCV_WINDOW);
   }
 
   void imageCb(const sensor_msgs::ImageConstPtr& msg)
@@ -105,8 +105,8 @@ public:
     
 
     // Update GUI Window
-    cv::imshow(OPENCV_WINDOW, sat/*cv_ptr->image*/);
-    cv::waitKey(3);
+    //cv::imshow(OPENCV_WINDOW, sat/*cv_ptr->image*/);
+    //cv::waitKey(3);
     
     // Output modified video stream
     image_pub_.publish(cv_ptr->toImageMsg());
@@ -115,8 +115,8 @@ public:
     //uint64_t center_out = (uint64_t) maxCenter.x << 32 | (uint32_t)maxCenter.y;
     
     geometry_msgs::PoseStamped msg_center;
-    msg_center.pose.position.x = maxCenter.x;
-    msg_center.pose.position.y = maxCenter.y;
+    msg_center.pose.position.x = maxCenter.x - 400;
+    msg_center.pose.position.y = maxCenter.y - 400;
     msg_center.pose.position.z = 0;
     xy_pub.publish(msg_center);
   }
