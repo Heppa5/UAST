@@ -63,59 +63,33 @@ class calc_waypoints():
         return self.data
     
     def find_waypoints(self, UseGpsCoordinates, max_error, start_offset):
-        # NED data
-        if (UseGpsCoordinates==False):
-            index=0;
-            end_of_list=False
-            selected_waypoints=[]
-            selected_waypoints.append(self.data[start_offset])
-            #for i in data:
-            while index < len(self.data)-1:
-                if index > start_offset:  #Start offset since data is invalid at first
-                    numb_data_points=2
-                    new_data_list = self.data[index:index+numb_data_points]
-                    #new_data_list = data[50:index+10]
-                    print "Starting new iteration and index is: " + str(index)
-                    while (self.linear_path_max_error(new_data_list,False) < max_error and end_of_list==False):
-                        print "Retrying and index is: " + str(index) + " and numb_data_points is: " + str(numb_data_points+1)
-                        if (index+numb_data_points < len(self.data)-1):
-                            numb_data_points=numb_data_points+1
-                            new_data_list = self.data[index:index+numb_data_points]
-                        else:
-                            end_of_list=True
-                    print "################### Done"
-                    selected_waypoints.append(self.data[index+numb_data_points-1]) # Minus 1 since, we have moved one step to far if we want to stay under max_error
-                    index=index+numb_data_points-1 # update index to be correct starting value
-                else:
-                    index=index+1
-            return selected_waypoints 
-
-        # GPS data 
-        else:
-            index=0;
-            end_of_list=False
-            selected_waypoints=[]
-            selected_waypoints.append(self.data[start_offset])
-            #for i in data:
-            while index < len(self.data)-1:
-                if index > start_offset:  #Start offset since data is invalid at first
-                    numb_data_points=2
-                    new_data_list = self.data[index:index+numb_data_points]
-                    #new_data_list = data[50:index+10]
-                    print "Starting new iteration and index is: " + str(index)
-                    while (self.linear_path_max_error(new_data_list,True) < max_error and end_of_list==False):
-                        print "Retrying and index is: " + str(index) + " and numb_data_points is: " + str(numb_data_points+1)
-                        if (index+numb_data_points < len(self.data)-1):
-                            numb_data_points=numb_data_points+1
-                            new_data_list = self.data[index:index+numb_data_points]
-                        else:
-                            end_of_list=True
-                    print "################### Done"
-                    selected_waypoints.append(self.data[index+numb_data_points-1]) # Minus 1 since, we have moved one step to far if we want to stay under max_error
-                    index=index+numb_data_points-1 # update index to be correct starting value
-                else:
-                    index=index+1
-            return selected_waypoints        
+        # NED data: UseGpsCoordinates==False
+        # GPS data: UseGpsCoordinates==True
+       
+        index=0;
+        end_of_list=False
+        selected_waypoints=[]
+        selected_waypoints.append(self.data[start_offset])
+        #for i in data:
+        while index < len(self.data)-1:
+            if index > start_offset:  #Start offset since data is invalid at first
+                numb_data_points=2
+                new_data_list = self.data[index:index+numb_data_points]
+                #new_data_list = data[50:index+10]
+                print "Starting new iteration and index is: " + str(index)
+                while (self.linear_path_max_error(new_data_list,UseGpsCoordinates) < max_error and end_of_list==False):
+                    print "Retrying and index is: " + str(index) + " and numb_data_points is: " + str(numb_data_points+1)
+                    if (index+numb_data_points < len(self.data)-1):
+                        numb_data_points=numb_data_points+1
+                        new_data_list = self.data[index:index+numb_data_points]
+                    else:
+                        end_of_list=True
+                print "################### Done"
+                selected_waypoints.append(self.data[index+numb_data_points-1]) # Minus 1 since, we have moved one step to far if we want to stay under max_error
+                index=index+numb_data_points-1 # update index to be correct starting value
+            else:
+                index=index+1
+        return selected_waypoints 
             
 
 
@@ -127,7 +101,7 @@ selected_waypoints_GPS=wow.find_waypoints(True,0.5,50)
 full_data=wow.return_full_dataset()
 
 
-# Create KML file
+# Create KML file for NED FILTERED datapoints
 kml = kmlclass()
 kml.begin("DroneTrack_NED.kml","DroneTrack", "", 5.0)
 kml.trksegbegin("Track1"," ", "red", "absolute")
@@ -141,7 +115,7 @@ kml.trksegend()
 kml.end()
 
 
-# Create KML file
+# Create KML file for GPS FILTERED datapoints
 kml.begin("DroneTrack_GPS.kml","DroneTrack", "", 5.0)
 kml.trksegbegin("Track1"," ", "red", "absolute")
 
@@ -153,7 +127,7 @@ for i in selected_waypoints_GPS:
 kml.trksegend()
 kml.end()
 
-# Create KML file
+# Create KML file for FULL drone track
 kml.begin("DroneTrack_full.kml","DroneTrack", "", 5.0)
 kml.trksegbegin("Track1"," ", "red", "absolute")
 

@@ -1,0 +1,24 @@
+index=0;
+end_of_list=False
+selected_waypoints=[]
+selected_waypoints.append(self.data[start_offset])
+#for i in data:
+while index < len(self.data)-1:
+    if index > start_offset:  #Start offset since data is invalid at first
+        numb_data_points=2
+        new_data_list = self.data[index:index+numb_data_points]
+        #new_data_list = data[50:index+10]
+        print "Starting new iteration and index is: " + str(index)
+        while (self.linear_path_max_error(new_data_list,True) < max_error and end_of_list==False):
+            print "Retrying and index is: " + str(index) + " and numb_data_points is: " + str(numb_data_points+1)
+            if (index+numb_data_points < len(self.data)-1):
+                numb_data_points=numb_data_points+1
+                new_data_list = self.data[index:index+numb_data_points]
+            else:
+                end_of_list=True
+        print "################### Done"
+        selected_waypoints.append(self.data[index+numb_data_points-1]) # Minus 1 since, we have moved one step to far if we want to stay under max_error
+        index=index+numb_data_points-1 # update index to be correct starting value
+    else:
+        index=index+1
+return selected_waypoints  
